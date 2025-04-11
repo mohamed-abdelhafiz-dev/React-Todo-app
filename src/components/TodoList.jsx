@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Button,
   Card,
@@ -17,24 +18,24 @@ import { todosContext } from "../contexts/todosContext.js";
 export default function TodoList() {
   const [filtering, setFiltering] = useState("All");
   const [Todos, setTodos] = useState([
-    {
-      id: uniqueId(),
-      title: "Task One",
-      description: "this a very important task!",
-      completed: false,
-    },
-    {
-      id: uniqueId(),
-      title: "Task Two",
-      description: "this a very important task 2 !",
-      completed: false,
-    },
-    {
-      id: uniqueId(),
-      title: "Task Three",
-      description: "this a very important task 3 !",
-      completed: false,
-    },
+    // {
+    //   id: uniqueId(),
+    //   title: "Task One",
+    //   description: "this a very important task!",
+    //   completed: false,
+    // },
+    // {
+    //   id: uniqueId(),
+    //   title: "Task Two",
+    //   description: "this a very important task 2 !",
+    //   completed: false,
+    // },
+    // {
+    //   id: uniqueId(),
+    //   title: "Task Three",
+    //   description: "this a very important task 3 !",
+    //   completed: false,
+    // },
   ]);
   const [newTaskInput, setNewTaskInput] = useState("");
 
@@ -44,7 +45,7 @@ export default function TodoList() {
   }).map((todo) => <Todo key={todo.id} todoItem={todo} />);
 
   function handleAddBtn() {
-    if (newTaskInput) {
+    if (newTaskInput.trim()) {
       setTodos([
         ...Todos,
         {
@@ -101,9 +102,16 @@ export default function TodoList() {
                   label="New task"
                   variant="outlined"
                   sx={{ width: "100%" }}
+                  slotProps={{
+                    input: {
+                      style: {
+                        height: "50px",
+                      },
+                    },
+                  }}
                   value={newTaskInput}
                   onChange={(e) => {
-                    setNewTaskInput(e.target.value.trim());
+                    setNewTaskInput(e.target.value);
                   }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
