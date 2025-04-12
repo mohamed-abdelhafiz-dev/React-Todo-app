@@ -32,6 +32,15 @@ export default function Todo({ todoItem }) {
   });
 
   //handle functions
+  function handleCompleteCheck() {
+    const newTodos = todos.map((todo) => {
+      return todo.id === todoItem.id
+        ? { ...todo, completed: !todo.completed }
+        : todo;
+    });
+    setTodos(newTodos);
+    localStorage.setItem("todos", JSON.stringify(newTodos));
+  }
   function handleEditClick() {
     setShowEditModal(true);
   }
@@ -50,6 +59,7 @@ export default function Todo({ todoItem }) {
           };
     });
     setTodos(newTodos);
+    localStorage.setItem("todos", JSON.stringify(newTodos));
     setShowEditModal(false);
   }
   function handleEditClose() {
@@ -64,6 +74,7 @@ export default function Todo({ todoItem }) {
       return todo.id !== todoItem.id;
     });
     setTodos(newTodos);
+    localStorage.setItem("todos", JSON.stringify(newTodos));
   }
   function handleDeleteClose() {
     setShowDeleteModal(false);
@@ -79,7 +90,7 @@ export default function Todo({ todoItem }) {
         slotProps={{
           paper: {
             style: {
-              width:"476px"
+              width: "476px",
             },
           },
         }}
@@ -125,14 +136,14 @@ export default function Todo({ todoItem }) {
         </DialogContent>
         <DialogActions>
           <Button
-            color="success"
+            color="primary"
             onClick={handleEditConfirmation}
             sx={{ textTransform: "capitalize", fontSize: 17 }}
           >
             Save
           </Button>
           <Button
-            color="error"
+            color="inherit"
             onClick={handleEditClose}
             sx={{ textTransform: "capitalize", fontSize: 17 }}
           >
@@ -158,14 +169,14 @@ export default function Todo({ todoItem }) {
         <DialogActions>
           <Button
             onClick={handleDeleteConfirmation}
-            color="success"
+            color="error"
             sx={{ textTransform: "capitalize", fontSize: 17 }}
           >
-            Confirm
+            Delete
           </Button>
           <Button
+            color="inherit"
             onClick={handleDeleteClose}
-            color="error"
             sx={{ textTransform: "capitalize", fontSize: 17 }}
           >
             Close
@@ -244,14 +255,7 @@ export default function Todo({ todoItem }) {
                         },
                       }
                 }
-                onClick={() => {
-                  const newTodos = todos.map((todo) => {
-                    return todo.id === todoItem.id
-                      ? { ...todo, completed: !todo.completed }
-                      : todo;
-                  });
-                  setTodos(newTodos);
-                }}
+                onClick={handleCompleteCheck}
               >
                 <CheckIcon
                   sx={{ "@media (max-width:400px)": { fontSize: "16px" } }}

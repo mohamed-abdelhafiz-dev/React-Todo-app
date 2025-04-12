@@ -12,31 +12,15 @@ import {
   Grid,
 } from "@mui/material";
 import Todo from "./Todo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uniqueId } from "uuid"; // Use uuid for unique IDs
 import { todosContext } from "../contexts/todosContext.js";
 export default function TodoList() {
   const [filtering, setFiltering] = useState("All");
-  const [Todos, setTodos] = useState([
-    // {
-    //   id: uniqueId(),
-    //   title: "Task One",
-    //   description: "this a very important task!",
-    //   completed: false,
-    // },
-    // {
-    //   id: uniqueId(),
-    //   title: "Task Two",
-    //   description: "this a very important task 2 !",
-    //   completed: false,
-    // },
-    // {
-    //   id: uniqueId(),
-    //   title: "Task Three",
-    //   description: "this a very important task 3 !",
-    //   completed: false,
-    // },
-  ]);
+  const [Todos, setTodos] = useState([]);
+  useEffect(() => {
+    setTodos(JSON.parse(localStorage.getItem("todos")) ?? []);
+  }, []);
   const [newTaskInput, setNewTaskInput] = useState("");
 
   const TodosList = Todos.filter((todo) => {
@@ -46,7 +30,7 @@ export default function TodoList() {
 
   function handleAddBtn() {
     if (newTaskInput.trim()) {
-      setTodos([
+      const newTodos = [
         ...Todos,
         {
           id: uniqueId(),
@@ -54,7 +38,9 @@ export default function TodoList() {
           description: "",
           completed: false,
         },
-      ]);
+      ];
+      setTodos(newTodos);
+      localStorage.setItem("todos", JSON.stringify(newTodos));
       setNewTaskInput("");
     }
   }
@@ -129,7 +115,8 @@ export default function TodoList() {
                     textTransform: "capitalize",
                   }}
                   variant="contained"
-                  color="error"
+                  color="primary"
+                  disabled={newTaskInput.trim().length === 0}
                   onClick={handleAddBtn}
                 >
                   Add
