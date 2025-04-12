@@ -6,7 +6,10 @@
 
 body {
   min-height: 100vh;
-  background-color: #e0e0e0;
+}
+
+.App {
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 /* general utility classes */
@@ -21,37 +24,37 @@ body {
 
 /* fonts */
 @font-face {
-  font-family: 'main';
-  src: url('/src/assets/fonts/WinkyRough-Regular.ttf') format('truetype');
+  font-family: 'WinkyRough-Regular';
+  src: url('./assets/fonts/WinkyRough-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'main';
-  src: url('/src/assets/fonts/WinkyRough-Bold.ttf') format('truetype');
+  font-family: 'WinkyRough-Bold';
+  src: url('./assets/fonts/WinkyRough-Bold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'main';
-  src: url('/src/assets/fonts/WinkyRough-Italic.ttf') format('truetype');
+  font-family: 'WinkyRough-BoldItalic';
+  src: url('./assets/fonts/WinkyRough-BoldItalic.ttf') format('truetype');
   font-weight: normal;
   font-style: italic;
 }
 
 @font-face {
-  font-family: 'main';
+  font-family: 'WinkyRough-Italic';
   src: url('/src/assets/fonts/WinkyRough-Italic.ttf') format('truetype');
   font-weight: bold;
   font-style: italic;
 }
 
 @font-face {
-  font-family: 'main';
+  font-family: 'WinkyRough-Light';
   src: url('/src/assets/fonts/WinkyRough-Light.ttf') format('truetype');
-  font-weight: 100;
+  font-weight: 300;
   font-style: normal;
 }
 

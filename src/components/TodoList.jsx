@@ -49,10 +49,18 @@ export default function TodoList() {
       <div className="todoCard">
         <Card sx={{ minWidth: 275, textAlign: "center", my: 10 }}>
           <CardContent>
-            <Typography variant="h3" sx={{ fontStyle: "italic" }}>
+            <Typography
+              variant="h3"
+              sx={{
+                fontStyle:"italic",
+                fontWeight: 600,
+                fontFamily: "serif",
+                fontSize: 35,
+              }}
+            >
               TODO
             </Typography>
-            <Divider sx={{ mt: -2, mb: 2 }} />
+            <Divider sx={{ mt: 0, mb: 2 }} />
 
             {/* tasks filter */}
             <ToggleButtonGroup

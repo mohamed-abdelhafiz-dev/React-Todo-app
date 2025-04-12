@@ -185,8 +185,9 @@ export default function Todo({ todoItem }) {
       </Dialog>
       <Card
         sx={{
+          paddingTop: "7px",
           textAlign: "left",
-          bgcolor: "#283593",
+          bgcolor: "#6b707f",
           color: "white",
           mt: 1.5,
           transition: "all 0.2s",
@@ -206,7 +207,7 @@ export default function Todo({ todoItem }) {
                     ? {
                         textDecoration: "line-through",
                         fontWeight: "100",
-                        color: "gray",
+                        color: "darkgrey",
                       }
                     : ""
                 }
@@ -224,7 +225,6 @@ export default function Todo({ todoItem }) {
           <Grid size={{ xs: 6, sm: 5, md: 5, lg: 5 }}>
             <CardActions
               sx={{
-                height: 100,
                 display: "flex",
                 justifyContent: "space-around",
               }}
