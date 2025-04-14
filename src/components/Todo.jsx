@@ -137,18 +137,18 @@ export default function Todo({ todoItem }) {
         </DialogContent>
         <DialogActions>
           <Button
-            color="primary"
-            onClick={handleEditConfirmation}
-            sx={{ textTransform: "capitalize", fontSize: 17 }}
-          >
-            Save
-          </Button>
-          <Button
             color="inherit"
             onClick={handleEditClose}
             sx={{ textTransform: "capitalize", fontSize: 17 }}
           >
             Close
+          </Button>
+          <Button
+            color="primary"
+            onClick={handleEditConfirmation}
+            sx={{ textTransform: "capitalize", fontSize: 17 }}
+          >
+            Save
           </Button>
         </DialogActions>
       </Dialog>
@@ -169,18 +169,18 @@ export default function Todo({ todoItem }) {
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={handleDeleteConfirmation}
-            color="error"
-            sx={{ textTransform: "capitalize", fontSize: 17 }}
-          >
-            Delete
-          </Button>
-          <Button
             color="inherit"
             onClick={handleDeleteClose}
             sx={{ textTransform: "capitalize", fontSize: 17 }}
           >
             Close
+          </Button>
+          <Button
+            onClick={handleDeleteConfirmation}
+            color="error"
+            sx={{ textTransform: "capitalize", fontSize: 17 }}
+          >
+            Delete
           </Button>
         </DialogActions>
       </Dialog>
