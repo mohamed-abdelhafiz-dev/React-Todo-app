@@ -1,3 +1,6 @@
-import { createContext } from "react";
-const TodosContext = createContext([]);
-export default TodosContext;
+import { create } from "zustand";
+const useTodosState = create((set) => ({
+  todos: [],
+  setTodos: (newTodos) => set({ todos: newTodos }),
+}));
+export default useTodosState;

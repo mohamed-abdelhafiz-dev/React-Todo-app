@@ -14,7 +14,6 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import TodoList from "./components/TodoList";
 import { useState, useEffect } from "react";
-import TodosContextProvider from "./contexts/TodosContextProvider";
 
 function App() {
   const [mode, setMode] = useState(
@@ -112,9 +111,7 @@ function App() {
           </Box>
 
           {/* Todo List */}
-          <TodosContextProvider>
             <TodoList />
-          </TodosContextProvider>
         </Container>
 
         {/* Scroll to Top Button */}
