@@ -20,10 +20,10 @@ import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 
 import { useContext, useState } from "react";
-import { todosContext } from "../contexts/todosContext";
+import TodosContext from "../contexts/todosContext";
 
 export default function Todo({ todoItem }) {
-  const [todos, setTodos] = useContext(todosContext);
+  const [todos, setTodos] = useContext(TodosContext);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editTodo, setEditTodo] = useState({

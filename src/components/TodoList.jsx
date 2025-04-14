@@ -12,12 +12,12 @@ import {
   Grid,
 } from "@mui/material";
 import Todo from "./Todo";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { v4 as uniqueId } from "uuid"; // Use uuid for unique IDs
-import { todosContext } from "../contexts/todosContext.js";
+import TodosContext from "../contexts/todosContext";
 export default function TodoList() {
   const [filtering, setFiltering] = useState("All");
-  const [Todos, setTodos] = useState([]);
+  const [Todos, setTodos] = useContext(TodosContext);
   useEffect(() => {
     setTodos(JSON.parse(localStorage.getItem("todos")) ?? []);
   }, []);
@@ -45,14 +45,13 @@ export default function TodoList() {
     }
   }
   return (
-    <todosContext.Provider value={[Todos, setTodos]}>
       <div className="todoCard">
         <Card sx={{ minWidth: 275, textAlign: "center", my: 10 }}>
           <CardContent>
             <Typography
               variant="h3"
               sx={{
-                fontStyle:"italic",
+                fontStyle: "italic",
                 fontWeight: 600,
                 fontFamily: "serif",
                 fontSize: 35,
@@ -134,6 +133,5 @@ export default function TodoList() {
           </CardActions>
         </Card>
       </div>
-    </todosContext.Provider>
   );
 }

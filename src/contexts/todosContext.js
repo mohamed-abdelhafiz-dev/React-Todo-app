@@ -1,4 +1,3 @@
 import { createContext } from "react";
-
-
-export const todosContext = createContext([]);
+const TodosContext = createContext([]);
+export default TodosContext;
