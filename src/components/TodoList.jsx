@@ -36,9 +36,8 @@ export default function TodoList() {
     return editTodo.title.trim().length === 0;
   }, [editTodo.title]);
 
-
   useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos)); 
+    localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
   const [newTaskInput, setNewTaskInput] = useState("");
@@ -154,6 +153,12 @@ export default function TodoList() {
             onChange={(e) => {
               setEditTodo({ ...editTodo, title: e.target.value });
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleEditConfirmation();
+              }
+            }}
           />
           {titleEditIsEmpty && (
             <Alert severity="error">Todo title is required.</Alert>
@@ -169,6 +174,12 @@ export default function TodoList() {
             value={editTodo.description}
             onChange={(e) => {
               setEditTodo({ ...editTodo, description: e.target.value });
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleEditConfirmation();
+              }
             }}
           />
         </DialogContent>
@@ -191,6 +202,12 @@ export default function TodoList() {
       </Dialog>
       {/* Delete Modal  */}
       <Dialog
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            handleDeleteConfirmation();
+          }
+        }}
         open={showDeleteModal}
         onClose={handleDeleteClose}
         aria-labelledby="alert-dialog-title"
@@ -221,6 +238,7 @@ export default function TodoList() {
           </Button>
         </DialogActions>
       </Dialog>
+
       <div className="todoCard">
         <Card sx={{ minWidth: 275, textAlign: "center", my: 10 }}>
           <CardContent>
