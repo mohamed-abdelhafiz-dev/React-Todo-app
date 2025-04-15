@@ -5,34 +5,21 @@ import {
   Grid,
   IconButton,
   Typography,
-  DialogActions,
-  DialogContentText,
-  DialogTitle,
-  DialogContent,
-  Dialog,
-  Button,
-  TextField,
-  Alert,
 } from "@mui/material";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 
-import { useMemo, useState } from "react";
 import useTodosState from "../contexts/todosContext";
+import { useEffect } from "react";
 
-export default function Todo({ todoItem }) {
+export default function Todo({ todoItem, handleEditClick, handleDeleteClick }) {
   const todos = useTodosState((state) => state.todos);
   const setTodos = useTodosState((state) => state.setTodos);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editTodo, setEditTodo] = useState({
-    title: todoItem.title,
-    description: todoItem.description,
-  });
-
-  //handle functions
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
   function handleCompleteCheck() {
     const newTodos = todos.map((todo) => {
       return todo.id === todoItem.id
@@ -40,153 +27,9 @@ export default function Todo({ todoItem }) {
         : todo;
     });
     setTodos(newTodos);
-    localStorage.setItem("todos", JSON.stringify(newTodos));
   }
-  function handleEditClick() {
-    setShowEditModal(true);
-  }
-  function handleEditConfirmation() {
-    if (editTodo.title.trim().length === 0) {
-      return;
-    }
-
-    const newTodos = todos.map((todo) => {
-      return todo.id !== todoItem.id
-        ? todo
-        : {
-            ...todo,
-            title: editTodo.title,
-            description: editTodo.description,
-          };
-    });
-    setTodos(newTodos);
-    localStorage.setItem("todos", JSON.stringify(newTodos));
-    setShowEditModal(false);
-  }
-  function handleEditClose() {
-    setShowEditModal(false);
-  }
-
-  function handleDeleteClick() {
-    setShowDeleteModal(true);
-  }
-  function handleDeleteConfirmation() {
-    const newTodos = todos.filter((todo) => {
-      return todo.id !== todoItem.id;
-    });
-    setTodos(newTodos);
-    localStorage.setItem("todos", JSON.stringify(newTodos));
-  }
-  function handleDeleteClose() {
-    setShowDeleteModal(false);
-  }
-
-  //handle functions//
-
-  const titleEditIsEmpty = useMemo(() => {
-    return editTodo.title.trim().length === 0;
-  }, [editTodo.title]);
-  
   return (
     <>
-      {/* Edit Modal */}
-      <Dialog
-        slotProps={{
-          paper: {
-            style: {
-              width: "476px",
-            },
-          },
-        }}
-        open={showEditModal}
-        onClose={handleEditClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          Editing '{todoItem.title}' todo..
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            required
-            margin="dense"
-            id="Title"
-            name="task title"
-            label="Title"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={editTodo.title}
-            onChange={(e) => {
-              setEditTodo({ ...editTodo, title: e.target.value });
-            }}
-          />
-          {titleEditIsEmpty && (
-            <Alert severity="error">Todo title is required.</Alert>
-          )}
-          <TextField
-            margin="dense"
-            id="Description"
-            name="task description"
-            label="Description"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={editTodo.description}
-            onChange={(e) => {
-              setEditTodo({ ...editTodo, description: e.target.value });
-            }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button
-            color="inherit"
-            onClick={handleEditClose}
-            sx={{ textTransform: "capitalize", fontSize: 17 }}
-          >
-            Close
-          </Button>
-          <Button
-            color="primary"
-            onClick={handleEditConfirmation}
-            sx={{ textTransform: "capitalize", fontSize: 17 }}
-          >
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* Delete Modal  */}
-      <Dialog
-        open={showDeleteModal}
-        onClose={handleDeleteClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          Are you sure you want to delete '{todoItem.title}' ?
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            This todo will be deleted immediately. You can't undo this action.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            color="inherit"
-            onClick={handleDeleteClose}
-            sx={{ textTransform: "capitalize", fontSize: 17 }}
-          >
-            Close
-          </Button>
-          <Button
-            onClick={handleDeleteConfirmation}
-            color="error"
-            sx={{ textTransform: "capitalize", fontSize: 17 }}
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
       <Card
         sx={{
           paddingTop: "7px",
@@ -277,7 +120,9 @@ export default function Todo({ todoItem }) {
                     boxShadow: "0px 7px 7px rgb(0,0,0,0.4)",
                   },
                 }}
-                onClick={handleEditClick}
+                onClick={() => {
+                  handleEditClick(todoItem);
+                }}
               >
                 <EditIcon
                   sx={{ "@media (max-width:400px)": { fontSize: "16px" } }}
@@ -295,7 +140,9 @@ export default function Todo({ todoItem }) {
                     boxShadow: "0px 7px 7px rgb(0,0,0,0.4)",
                   },
                 }}
-                onClick={handleDeleteClick}
+                onClick={() => {
+                  handleDeleteClick(todoItem);
+                }}
               >
                 <DeleteIcon
                   sx={{ "@media (max-width:400px)": { fontSize: "16px" } }}
