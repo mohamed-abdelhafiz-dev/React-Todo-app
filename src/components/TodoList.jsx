@@ -203,7 +203,10 @@ export default function TodoList() {
       {/* Delete Modal  */}
       <Dialog
         onKeyDown={(e) => {
-          if (e.key === "Enter") {
+          if (
+            e.key === "Enter" &&
+            document.activeElement !== document.querySelector(".closeBtn")
+          ) {
             e.preventDefault();
             handleDeleteConfirmation();
           }
@@ -223,6 +226,7 @@ export default function TodoList() {
         </DialogContent>
         <DialogActions>
           <Button
+            className="closeBtn"
             color="inherit"
             onClick={handleDeleteClose}
             sx={{ textTransform: "capitalize", fontSize: 17 }}
