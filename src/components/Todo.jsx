@@ -19,7 +19,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import useTodosState from "../contexts/todosContext";
 
 export default function Todo({ todoItem }) {
@@ -83,7 +83,10 @@ export default function Todo({ todoItem }) {
 
   //handle functions//
 
-  const titleEditIsEmpty = editTodo.title.trim().length === 0;
+  const titleEditIsEmpty = useMemo(() => {
+    return editTodo.title.trim().length === 0;
+  }, [editTodo.title]);
+  
   return (
     <>
       {/* Edit Modal */}

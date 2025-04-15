@@ -13,7 +13,7 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import TodoList from "./components/TodoList";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 function App() {
   const [mode, setMode] = useState(
@@ -43,15 +43,17 @@ function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const theme = createTheme({
-    palette: {
-      mode,
-      background: {
-        default: mode === "light" ? "#ddd" : "#222",
-        paper: mode === "light" ? "#ccc" : "#333",
+  const theme = useMemo(() => {
+    return createTheme({
+      palette: {
+        mode,
+        background: {
+          default: mode === "light" ? "#ddd" : "#222",
+          paper: mode === "light" ? "#ccc" : "#333",
+        },
       },
-    },
-  });
+    });
+  }, [mode]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -111,7 +113,7 @@ function App() {
           </Box>
 
           {/* Todo List */}
-            <TodoList />
+          <TodoList />
         </Container>
 
         {/* Scroll to Top Button */}

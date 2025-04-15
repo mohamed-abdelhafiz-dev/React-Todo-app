@@ -12,7 +12,7 @@ import {
   Grid,
 } from "@mui/material";
 import Todo from "./Todo";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { v4 as uniqueId } from "uuid"; // Use uuid for unique IDs
 import useTodosState from "../contexts/todosContext";
 export default function TodoList() {
@@ -25,10 +25,14 @@ export default function TodoList() {
   }, []);
   const [newTaskInput, setNewTaskInput] = useState("");
 
-  const TodosList = todos.filter((todo) => {
-    if (filtering === "All") return true;
-    return filtering === "Completed" ? todo.completed : !todo.completed;
-  }).map((todo) => <Todo key={todo.id} todoItem={todo} />);
+  const TodosList = useMemo(() => {
+    return todos
+      .filter((todo) => {
+        if (filtering === "All") return true;
+        return filtering === "Completed" ? todo.completed : !todo.completed;
+      })
+      .map((todo) => <Todo key={todo.id} todoItem={todo} />);
+  }, [todos, filtering]);
 
   function handleAddBtn() {
     if (newTaskInput.trim()) {
