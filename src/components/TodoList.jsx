@@ -19,7 +19,7 @@ import {
 import Todo from "./Todo";
 import { useEffect, useMemo, useState } from "react";
 import { useSnackbarContext } from "../contexts/SnackbarContext";
-import { useTodosContext } from "../contexts/TodosContext";
+import { useTodosContext } from "../contexts/TodosContext.js";
 
 export default function TodoList() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
