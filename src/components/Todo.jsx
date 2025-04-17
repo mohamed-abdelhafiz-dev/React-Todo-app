@@ -11,23 +11,23 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 
-import useTodosState from "../contexts/todosContext";
-import { useEffect } from "react";
+import { useTodosContext } from "../contexts/TodosContext";
 import { useSnackbarContext } from "../contexts/SnackbarContext";
+import { useEffect } from "react";
 export default function Todo({ todoItem, handleEditClick, handleDeleteClick }) {
-  const todos = useTodosState((state) => state.todos);
-  const setTodos = useTodosState((state) => state.setTodos);
+  const [todos, todosDispatch] = useTodosContext();
+
   const [, setSnackbarState] = useSnackbarContext();
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
   function handleCompleteCheck() {
-    const newTodos = todos.map((todo) => {
-      return todo.id === todoItem.id
-        ? { ...todo, completed: !todo.completed }
-        : todo;
+    todosDispatch({
+      type: "completeTodo",
+      payload: {
+        todoItem: todoItem,
+      },
     });
-    setTodos(newTodos);
     setSnackbarState({
       open: true,
       message: todoItem.completed

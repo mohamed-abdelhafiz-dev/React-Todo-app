@@ -17,17 +17,16 @@ import {
   Alert,
 } from "@mui/material";
 import Todo from "./Todo";
-import { useEffect, useMemo, useState } from "react";
-import { v4 as uniqueId } from "uuid"; // Use uuid for unique IDs
-import useTodosState from "../contexts/todosContext";
+import { useEffect, useMemo,useState } from "react";
 import { useSnackbarContext } from "../contexts/SnackbarContext";
+import { useTodosContext } from "../contexts/TodosContext";
 export default function TodoList() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [currentTodo, setCurrentTodo] = useState({});
   const [filtering, setFiltering] = useState("All");
-  const todos = useTodosState((state) => state.todos);
-  const setTodos = useTodosState((state) => state.setTodos);
+  const [newTaskInput, setNewTaskInput] = useState("");
+  const [todos, todosDispatch] = useTodosContext();
   const [editTodo, setEditTodo] = useState({
     title: "",
     description: "",
@@ -38,10 +37,8 @@ export default function TodoList() {
   }, [editTodo.title]);
 
   useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
+    todosDispatch({ type: "setToLocalStorage" });
   }, [todos]);
-
-  const [newTaskInput, setNewTaskInput] = useState("");
 
   const TodosList = useMemo(() => {
     return todos
@@ -62,16 +59,12 @@ export default function TodoList() {
   //handle functions
   function handleAddBtn() {
     if (newTaskInput.trim()) {
-      const newTodos = [
-        ...todos,
-        {
-          id: uniqueId(),
+      todosDispatch({
+        type: "addTodo",
+        payload: {
           title: newTaskInput,
-          description: "",
-          completed: false,
         },
-      ];
-      setTodos(newTodos);
+      });
       setNewTaskInput("");
       setSnackbarState({
         open: true,
@@ -80,7 +73,6 @@ export default function TodoList() {
       });
     }
   }
-
   function handleEditClick(todoItem) {
     setShowEditModal(true);
     setCurrentTodo(todoItem);
@@ -93,17 +85,13 @@ export default function TodoList() {
     if (editTodo.title.trim().length === 0) {
       return;
     }
-
-    const newTodos = todos.map((todo) => {
-      return todo.id !== currentTodo.id
-        ? todo
-        : {
-            ...todo,
-            title: editTodo.title,
-            description: editTodo.description,
-          };
+    todosDispatch({
+      type: "editTodo",
+      payload: {
+        currentTodo: currentTodo,
+        editTodo: editTodo,
+      },
     });
-    setTodos(newTodos);
     setShowEditModal(false);
     setSnackbarState({
       open: true,
@@ -120,10 +108,12 @@ export default function TodoList() {
     setCurrentTodo(todoItem);
   }
   function handleDeleteConfirmation() {
-    const newTodos = todos.filter((todo) => {
-      return todo.id !== currentTodo.id;
+    todosDispatch({
+      type: "deleteTodo",
+      payload: {
+        todoItem: currentTodo,
+      },
     });
-    setTodos(newTodos);
     setShowDeleteModal(false);
     setSnackbarState({
       open: true,
