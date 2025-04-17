@@ -1,8 +1,6 @@
 import { createContext, useContext } from "react";
 
-const TodosContext = createContext([]);
-export default TodosContext;
-
+export const TodosContext = createContext([]);
 export function useTodosContext() {
   return useContext(TodosContext);
-};
+}

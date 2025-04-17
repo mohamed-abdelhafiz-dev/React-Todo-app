@@ -1,6 +1,6 @@
 import { useReducer } from "react";
 import todosReducer from "../reducers/todosReducer";
-import TodosContext from "./TodosContext.js";
+import { TodosContext } from "./TodosContext";
 export default function TodosProvider({ children }) {
   const [todos, todosDispatch] = useReducer(
     todosReducer,
