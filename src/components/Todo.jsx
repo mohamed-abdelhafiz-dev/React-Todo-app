@@ -13,10 +13,11 @@ import EditIcon from "@mui/icons-material/Edit";
 
 import useTodosState from "../contexts/todosContext";
 import { useEffect } from "react";
-
+import { useSnackbarContext } from "../contexts/SnackbarContext";
 export default function Todo({ todoItem, handleEditClick, handleDeleteClick }) {
   const todos = useTodosState((state) => state.todos);
   const setTodos = useTodosState((state) => state.setTodos);
+  const [, setSnackbarState] = useSnackbarContext();
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
@@ -27,6 +28,13 @@ export default function Todo({ todoItem, handleEditClick, handleDeleteClick }) {
         : todo;
     });
     setTodos(newTodos);
+    setSnackbarState({
+      open: true,
+      message: todoItem.completed
+        ? "Task Marked as Incomplete"
+        : "Task Completed",
+      severity: todoItem.completed ? "info" : "success",
+    });
   }
   return (
     <>

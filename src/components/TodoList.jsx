@@ -20,6 +20,7 @@ import Todo from "./Todo";
 import { useEffect, useMemo, useState } from "react";
 import { v4 as uniqueId } from "uuid"; // Use uuid for unique IDs
 import useTodosState from "../contexts/todosContext";
+import { useSnackbarContext } from "../contexts/SnackbarContext";
 export default function TodoList() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -31,7 +32,7 @@ export default function TodoList() {
     title: "",
     description: "",
   });
-
+  const [, setSnackbarState] = useSnackbarContext();
   const titleEditIsEmpty = useMemo(() => {
     return editTodo.title.trim().length === 0;
   }, [editTodo.title]);
@@ -72,6 +73,11 @@ export default function TodoList() {
       ];
       setTodos(newTodos);
       setNewTaskInput("");
+      setSnackbarState({
+        open: true,
+        message: "Todo added successfully",
+        severity: "success",
+      });
     }
   }
 
@@ -99,6 +105,11 @@ export default function TodoList() {
     });
     setTodos(newTodos);
     setShowEditModal(false);
+    setSnackbarState({
+      open: true,
+      message: "Todo edited successfully",
+      severity: "success",
+    });
   }
   function handleEditClose() {
     setShowEditModal(false);
@@ -114,6 +125,11 @@ export default function TodoList() {
     });
     setTodos(newTodos);
     setShowDeleteModal(false);
+    setSnackbarState({
+      open: true,
+      message: "Todo deleted successfully",
+      severity: "success",
+    });
   }
   function handleDeleteClose() {
     setShowDeleteModal(false);
