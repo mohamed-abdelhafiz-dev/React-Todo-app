@@ -13,7 +13,7 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import TodoList from "./components/TodoList";
 import { useState, useEffect, useMemo } from "react";
-import SnackBarProvider from "./contexts/SnackBarProvider";
+import SnackbarProvider from "./contexts/SnackbarProvider";
 import TodosProvider from "./contexts/TodosProvider";
 
 function App() {
@@ -59,7 +59,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <TodosProvider>
-        <SnackBarProvider>
+        <SnackbarProvider>
           <Box
             className="App flex-center"
             sx={{
@@ -132,7 +132,7 @@ function App() {
               </Fab>
             </Zoom>
           </Box>
-        </SnackBarProvider>
+        </SnackbarProvider>
       </TodosProvider>
     </ThemeProvider>
   );
