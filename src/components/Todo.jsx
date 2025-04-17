@@ -11,9 +11,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 
-import { useTodosContext } from "../contexts/TodosContext.js";
-import { useSnackbarContext } from "../contexts/SnackbarContext";
 import { useEffect } from "react";
+import { useTodosContext } from "../contexts/TodosContext";
+import { useSnackbarContext } from "../contexts/SnackbarContext";
 export default function Todo({ todoItem, handleEditClick, handleDeleteClick }) {
   const [todos, todosDispatch] = useTodosContext();
 
