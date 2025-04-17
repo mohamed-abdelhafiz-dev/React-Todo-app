@@ -17,7 +17,7 @@ import {
   Alert,
 } from "@mui/material";
 import Todo from "./Todo";
-import { useEffect, useMemo,useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSnackbarContext } from "../contexts/SnackbarContext";
 import { useTodosContext } from "../contexts/TodosContext";
 
