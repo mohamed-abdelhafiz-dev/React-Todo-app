@@ -11,30 +11,27 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 
-import { useEffect } from "react";
-import { useTodosContext } from "../contexts/TodosContext";
-import { useSnackbarContext } from "../contexts/SnackbarContext";
-export default function Todo({ todoItem, handleEditClick, handleDeleteClick }) {
-  const [todos, todosDispatch] = useTodosContext();
+import { useDispatch } from "react-redux";
+import { completeTodo } from "../redux/slices/todosSlice";
+import { showSnackbar } from "../redux/slices/snackbarSlice";
 
-  const [, setSnackbarState] = useSnackbarContext();
-  useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+export default function Todo({ todoItem, handleEditClick, handleDeleteClick }) {
+  const dispatch = useDispatch();
   function handleCompleteCheck() {
-    todosDispatch({
-      type: "completeTodo",
-      payload: {
+    dispatch(
+      completeTodo({
         todoItem: todoItem,
-      },
-    });
-    setSnackbarState({
-      open: true,
-      message: todoItem.completed
-        ? "Task Marked as Incomplete"
-        : "Task Completed",
-      severity: todoItem.completed ? "info" : "success",
-    });
+      })
+    );
+    dispatch(
+      showSnackbar({
+        open: true,
+        message: todoItem.completed
+          ? "Task Marked as Incomplete"
+          : "Task Completed",
+        severity: todoItem.completed ? "info" : "success",
+      })
+    );
   }
   return (
     <>

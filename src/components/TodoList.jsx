@@ -17,30 +17,34 @@ import {
   Alert,
 } from "@mui/material";
 import Todo from "./Todo";
-import { useEffect, useMemo, useState } from "react";
-import { useTodosContext } from "../contexts/TodosContext";
-import { useSnackbarContext } from "../contexts/SnackbarContext";
-
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addTodo,
+  changeEditedTodo,
+  changeFiltering,
+  changeModalTodo,
+  changeNewTodoInput,
+  deleteTodo,
+  editTodo,
+} from "../redux/slices/todosSlice";
+import { useMemo } from "react";
+import { showDeleteModal, showEditModal } from "../redux/slices/modalSlice";
+import { showSnackbar } from "../redux/slices/snackbarSlice";
 
 export default function TodoList() {
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [currentTodo, setCurrentTodo] = useState({});
-  const [filtering, setFiltering] = useState("All");
-  const [newTaskInput, setNewTaskInput] = useState("");
-  const [todos, todosDispatch] = useTodosContext();
-  const [editTodo, setEditTodo] = useState({
-    title: "",
-    description: "",
-  });
-  const [, setSnackbarState] = useSnackbarContext();
+  const todos = useSelector((state) => state.todos.todosList);
+  const filtering = useSelector((state) => state.todos.filtering);
+  const modalTodo = useSelector((state) => state.todos.modalTodo);
+  const newTaskInput = useSelector((state) => state.todos.newTodoInput);
+  const editedTodo = useSelector((state) => state.todos.editedTodo);
+  const editModalIsOpen = useSelector((state) => state.modal.editModalIsOpen);
+  const deleteModalIsOpen = useSelector(
+    (state) => state.modal.deleteModalIsOpen
+  );
+  const dispatch = useDispatch();
   const titleEditIsEmpty = useMemo(() => {
-    return editTodo.title.trim().length === 0;
-  }, [editTodo.title]);
-
-  useEffect(() => {
-    todosDispatch({ type: "setToLocalStorage" });
-  }, [todos]);
+    return editedTodo.title.trim().length === 0;
+  }, [editedTodo.title]);
 
   const TodosList = useMemo(() => {
     return todos
@@ -61,70 +65,81 @@ export default function TodoList() {
   //handle functions
   function handleAddBtn() {
     if (newTaskInput.trim()) {
-      todosDispatch({
-        type: "addTodo",
-        payload: {
+      dispatch(
+        addTodo({
           title: newTaskInput,
-        },
-      });
-      setNewTaskInput("");
-      setSnackbarState({
-        open: true,
-        message: "Todo added successfully",
-        severity: "success",
-      });
+        })
+      );
+      dispatch(changeNewTodoInput(""));
+
+      dispatch(
+        showSnackbar({
+          open: true,
+          message: "Todo added successfully",
+          severity: "success",
+        })
+      );
     }
   }
   function handleEditClick(todoItem) {
-    setShowEditModal(true);
-    setCurrentTodo(todoItem);
-    setEditTodo({
-      title: todoItem.title,
-      description: todoItem.description,
-    });
+    dispatch(showEditModal(true));
+    dispatch(changeModalTodo(todoItem));
+
+    dispatch(
+      changeEditedTodo({
+        title: todoItem.title,
+        description: todoItem.description,
+      })
+    );
   }
   function handleEditConfirmation() {
-    if (editTodo.title.trim().length === 0) {
+    if (editedTodo.title.trim().length === 0) {
       return;
     }
-    todosDispatch({
-      type: "editTodo",
-      payload: {
-        currentTodo: currentTodo,
-        editTodo: editTodo,
-      },
-    });
-    setShowEditModal(false);
-    setSnackbarState({
-      open: true,
-      message: "Todo edited successfully",
-      severity: "success",
-    });
+    dispatch(
+      editTodo({
+        modalTodo: modalTodo,
+        editedTodo:editedTodo
+      })
+    );
+
+    dispatch(showEditModal(false));
+
+    dispatch(
+      showSnackbar({
+        open: true,
+        message: "Todo edited successfully",
+        severity: "success",
+      })
+    );
   }
   function handleEditClose() {
-    setShowEditModal(false);
+    dispatch(showEditModal(false));
   }
 
   function handleDeleteClick(todoItem) {
-    setShowDeleteModal(true);
-    setCurrentTodo(todoItem);
+    dispatch(showDeleteModal(true));
+    dispatch(changeModalTodo(todoItem));
   }
   function handleDeleteConfirmation() {
-    todosDispatch({
-      type: "deleteTodo",
-      payload: {
-        todoItem: currentTodo,
-      },
-    });
-    setShowDeleteModal(false);
-    setSnackbarState({
-      open: true,
-      message: "Todo deleted successfully",
-      severity: "success",
-    });
+    dispatch(
+      deleteTodo({
+        todoItem: modalTodo,
+      })
+    );
+
+    dispatch(showDeleteModal(false));
+
+    dispatch(
+      showSnackbar({
+        open: true,
+        message: "Todo deleted successfully",
+        severity: "success",
+      })
+    );
   }
   function handleDeleteClose() {
-    setShowDeleteModal(false);
+    dispatch(showDeleteModal(false));
   }
   //handle functions//
 
@@ -139,13 +154,13 @@ export default function TodoList() {
             },
           },
         }}
-        open={showEditModal}
+        open={editModalIsOpen}
         onClose={handleEditClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Editing '{currentTodo.title}' todo..
+          Editing '{modalTodo.title}' todo..
         </DialogTitle>
         <DialogContent>
           <TextField
@@ -157,9 +172,11 @@ export default function TodoList() {
             type="text"
             fullWidth
             variant="standard"
-            value={editTodo.title}
+            value={editedTodo.title}
             onChange={(e) => {
-              setEditTodo({ ...editTodo, title: e.target.value });
+              dispatch(
+                changeEditedTodo({ ...editedTodo, title: e.target.value })
+              );
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -179,9 +196,11 @@ export default function TodoList() {
             type="text"
             fullWidth
             variant="standard"
-            value={editTodo.description}
+            value={editedTodo.description}
             onChange={(e) => {
-              setEditTodo({ ...editTodo, description: e.target.value });
+              dispatch(
+                changeEditedTodo({ ...editedTodo, description: e.target.value })
+              );
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -219,13 +238,13 @@ export default function TodoList() {
             handleDeleteConfirmation();
           }
         }}
-        open={showDeleteModal}
+        open={deleteModalIsOpen}
         onClose={handleDeleteClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Are you sure you want to delete '{currentTodo.title}' ?
+          Are you sure you want to delete '{modalTodo.title}' ?
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -272,7 +291,7 @@ export default function TodoList() {
               value={filtering}
               exclusive
               onChange={(e) => {
-                setFiltering(e.target.value);
+                dispatch(changeFiltering(e.target.value));
               }}
               aria-label="text alignment"
               sx={{ mt: 1 }}
@@ -310,7 +329,7 @@ export default function TodoList() {
                   }}
                   value={newTaskInput}
                   onChange={(e) => {
-                    setNewTaskInput(e.target.value);
+                    dispatch(changeNewTodoInput(e.target.value));
                   }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
